@@ -35,7 +35,7 @@ char *strcpy_func(char *s2, const char *s1)
 {
 	size_t j;
 
-	for (j = 0; src[j] != '\0'; j++)
+	for (j = 0; s1[j] != '\0'; j++)
 		s2[j] = s1[j];
 	s2[j] = '\0';
 	return (s2);
@@ -78,8 +78,8 @@ char *strncat_func(char *s2, const char *s1, size_t am)
 	size_t s2_len = strlen_func(s2);
 	size_t j;
 
-	for (j = 0; j < am && s[j] != '\0'; j++)
-		s2[s2_len + i] = s1[j];
+	for (j = 0; j < am && s1[j] != '\0'; j++)
+		s2[s2_len + j] = s1[j];
 	s2[s2_len + i] = '\0';
 
 	return (s2);
