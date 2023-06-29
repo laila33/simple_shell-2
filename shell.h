@@ -82,9 +82,9 @@ char **replace_aliases(char **args);
 
 /* String functions */
 int strlen_func(const char *s);
-char *strcat_func(char *dest, const char *src);
-char *strncat_func(char *dest, const char *src, size_t n);
-char *strcpy_func(char *dest, const char *src);
+char *strcat_func(char *s2, const char *s1);
+char *strncat_func(char *s2, const char *s1, size_t am);
+char *strcpy_func(char *s2, const char *s1);
 char *_strchr(char *s, char c);
 int _strspn(char *s, char *accept);
 int _strcmp(char *s1, char *s2);
