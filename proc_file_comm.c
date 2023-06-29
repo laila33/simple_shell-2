@@ -18,7 +18,7 @@ int cant_func(char *f_path)
 	if (!h_str)
 		return (127);
 
-	e = strlen_func(name) + strlen_func(h_str) + strlen_func(f_path) + 16;
+	e = strlen_func(y) + strlen_func(h_str) + strlen_func(f_path) + 16;
 	e_e = malloc(sizeof(char) * (e + 1));
 	if (!e_e)
 	{
@@ -26,12 +26,12 @@ int cant_func(char *f_path)
 		return (127);
 	}
 
-	strcpy_func(e_e, name);
-	strcp_func(e_e, ": ");
-	strcp_func(e_e, h_str);
-	strcp_func(e_e, ": Can't open ");
-	strcp_func(e_e, f_path);
-	strcp_func(e_e, "\n");
+	strcpy_func(e_e, y);
+	strcpy_func(e_e, ": ");
+	strcpy_func(e_e, h_str);
+	strcpy_func(e_e, ": Can't open ");
+	strcpy_func(e_e, f_path);
+	strcpy_func(e_e, "\n");
 
 	free(h_str);
 	write(STDERR_FILENO, e_e, e);
@@ -73,7 +73,7 @@ int proc_func(char *f_path, int *exe_e)
 		buffer[read_d] = '\0';
 		sizee += read_d;
 		l_count = _realloc(l_count, oldd, sizee);
-		strcp_func(l_count, buffer);
+		strcpy_func(l_count, buffer);
 		oldd = sizee;
 	} while (read_d);
 	for (j = 0; l_count[j] == '\n'; j++)
