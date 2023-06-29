@@ -57,7 +57,7 @@ int proc_func(char *f_path, int *exe_e)
 	int result;
 
 	x = 0;
-	f =result open(f_path, O_RDONLY);
+	f = open(f_path, O_RDONLY);
 	if (f == -1)
 	{
 		*exe_e = cant_func(f_path);
