@@ -19,7 +19,7 @@ extern char **environ;
 /* Global program name */
 char *name;
 /* Global history counter */
-int hist;
+int x;
 
 /**
  * struct list_s - A new struct type defining a linked list.
