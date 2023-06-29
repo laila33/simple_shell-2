@@ -2,7 +2,7 @@
 
 #include "shell_.h"
 
-int strlen_func(const char *s);
+int strlen_func(const char *ptr);
 char *strcpy_func(char *s2, const char *s1);
 char *strcat_func(char *s2, const char *s1);
 char *strncat_func(char *s2, const char *s1, size_t am);
