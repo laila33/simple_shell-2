@@ -73,7 +73,7 @@ int proc_func(char *f_path, int *exe_e)
 		buffer[read_d] = '\0';
 		sizee += read_d;
 		l_count = _realloc(l_count, oldd, sizee);
-		strcp_func(l_count, buffer);
+		strcpy_func(l_count, buffer);
 		oldd = sizee;
 	} while (read_d);
 	for (j = 0; l_count[j] == '\n'; j++)
