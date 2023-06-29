@@ -80,7 +80,7 @@ char *strncat_func(char *s2, const char *s1, size_t am)
 
 	for (j = 0; j < am && s1[j] != '\0'; j++)
 		s2[s2_len + j] = s1[j];
-	s2[s2_len + i] = '\0';
+	s2[s2_len + j] = '\0';
 
 	return (s2);
 }
