@@ -1,110 +1,102 @@
-/*
- * File: split.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
 
-#include "shell.h"
+#include "shell_.h"
 
-int token_len(char *str, char *delim);
-int count_tokens(char *str, char *delim);
-char **_strtok(char *line, char *delim);
+int token_func(char *s, char *d);
+int count_func(char *s, char *d);
+char **strtok_func(char *x, char *d);
 
 /**
- * token_len - Locates the delimiter index marking the end
- *             of the first token contained within a string.
- * @str: The string to be searched.
- * @delim: The delimiter character.
+ * token_func- Find location of the delimiter index mark.
+ * @s: string to searche
+ * @d: Delimiter Characte
  *
- * Return: The delimiter index marking the end of
- *         the intitial token pointed to be str.
+ * Return: Delimiter index marking 
  */
-int token_len(char *str, char *delim)
+int token_func(char *s, char *d)
 {
-	int index = 0, len = 0;
+	int index_x= 0, e = 0;
 
-	while (*(str + index) && *(str + index) != *delim)
+	while (*(s + index_x) && *(s + index_x) != *d)
 	{
-		len++;
-		index++;
+		e++;
+		index_x++;
 	}
 
-	return (len);
+	return (e);
 }
 
 /**
- * count_tokens - Counts the number of delimited
- *                words contained within a string.
- * @str: The string to be searched.
- * @delim: The delimiter character.
+ * count_func - Count the number of delimited word in string .
+ * @s: string to searche
+ * @d: Delimiter Character
  *
- * Return: The number of words contained within str.
+ * Return: Number of words contained.
  */
-int count_tokens(char *str, char *delim)
+int count_func(char *s, char *d)
 {
-	int index, tokens = 0, len = 0;
+	int index_x, k = 0, e = 0;
 
-	for (index = 0; *(str + index); index++)
-		len++;
+	for (index_x = 0; *(s + index_x); index_x++)
+		e++;
 
-	for (index = 0; index < len; index++)
+	for (index_x = 0; index_x < e; index_x++)
 	{
-		if (*(str + index) != *delim)
+		if (*(s + index_x) != *d)
 		{
-			tokens++;
-			index += token_len(str + index, delim);
+			k++;
+			index_x += token_func(s + index_x, d);
 		}
 	}
 
-	return (tokens);
+	return (k);
 }
 
 /**
- * _strtok - Tokenizes a string.
- * @line: The string.
- * @delim: The delimiter character to tokenize the string by.
+ * strtok_func - Tokenize String 
+ * @x: string
+ * @d: Delimiter character to tokenize the String by it .
  *
- * Return: A pointer to an array containing the tokenized words.
+ * Return: pointer to an array with tokenized words.
  */
-char **_strtok(char *line, char *delim)
+char **strtok_func(char *x, char *d)
 {
-	char **ptr;
-	int index = 0, tokens, t, letters, l;
+	char **str;
+	int index_x = 0, k, t, ch, i;
 
-	tokens = count_tokens(line, delim);
-	if (tokens == 0)
+	k = count_func(x, d);
+	if (k == 0)
 		return (NULL);
 
-	ptr = malloc(sizeof(char *) * (tokens + 2));
-	if (!ptr)
+	str = malloc(sizeof(char *) * (k + 2));
+	if (!str)
 		return (NULL);
 
-	for (t = 0; t < tokens; t++)
+	for (t = 0; t < k; t++)
 	{
-		while (line[index] == *delim)
-			index++;
+		while (x[index_x] == *d)
+			index_x++;
 
-		letters = token_len(line + index, delim);
+		ch = token_func(x + index_x, d);
 
-		ptr[t] = malloc(sizeof(char) * (letters + 1));
-		if (!ptr[t])
+		str[t] = malloc(sizeof(char) * (ch + 1));
+		if (!str[t])
 		{
-			for (index -= 1; index >= 0; index--)
-				free(ptr[index]);
-			free(ptr);
+			for (index_x -= 1; index_x >= 0; index_x--)
+				free(str[index_x]);
+			free(str);
 			return (NULL);
 		}
 
-		for (l = 0; l < letters; l++)
+		for (i = 0; i < ch; i++)
 		{
-			ptr[t][l] = line[index];
-			index++;
+			str[t][i] = x[index_x];
+			index_x++;
 		}
 
-		ptr[t][l] = '\0';
+		str[t][i] = '\0';
 	}
-	ptr[t] = NULL;
-	ptr[t + 1] = NULL;
+	str[t] = NULL;
+	str[t + 1] = NULL;
 
-	return (ptr);
+	return (str);
 }
