@@ -27,16 +27,16 @@ int num_length(int num)
 	if (num < 0)
 	{
 		len++;
-		num = num * -1;
+		numm = num * -1;
 	}
 	else
 	{
-		num1= num;
+		numm= num;
 	}
-	while (num1 > 9)
+	while (numm > 9)
 	{
 		len++;
-		num1 /= 10;
+		numm /= 10;
 	}
 
 	return (len);
@@ -80,7 +80,7 @@ char *itoa_func(int num)
 
 	len--;
 	do {
-		buffer[len] = (num1 % 10) + '0';
+		buffer[len] = (numm % 10) + '0';
 		num /= 10;
 		len--;
 	} while (num > 0);
