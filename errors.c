@@ -21,7 +21,7 @@ int generate_error(char **args, int err);
  */
 int num_length(int num)
 {
-	unsigned int num_;
+	unsigned int num;
 	int len = 1;
 
 	if (num < 0)
