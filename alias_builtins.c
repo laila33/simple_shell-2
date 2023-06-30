@@ -147,7 +147,7 @@ char **update_aliases(char **pars)
 		temp = aliases;
 		while (temp)
 		{
-			if (_strcmp(pars[i], temp->name) == 0)
+			if (strcmp_func(pars[i], temp->name) == 0)
 			{
 				new_value = malloc(sizeof(char) * (strlen_func(temp->value) + 1));
 				if (!new_value)
