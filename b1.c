@@ -32,7 +32,7 @@ void help_all_func(void)
 
 
 /**
- * The function "help_alias_func" provides information about how to use the "alias" command in C.
+ * help_alias_func - provides information about how to use the "alias" command in C.
  */
 void help_alias_func(void)
 {
@@ -55,7 +55,7 @@ void help_alias_func(void)
 
 
 /**
- * The function "help_cd_func" provides information about the "cd" command in C.
+ * help_cd_func - provides information about the "cd" command in C.
  */
 void help_cd_func(void)
 {
@@ -76,7 +76,7 @@ void help_cd_func(void)
 
 
 /**
- * The function "help_exit_func" provides information about the "exit" command in a shell.
+ * help_exit_func-  provides information about the "exit" command in a shell.
  */
 void help_exit_func(void)
 {
@@ -93,7 +93,7 @@ void help_exit_func(void)
 
 
 /**
- * The function "help_help_func" displays information about the "help" command in a shell program.
+ *help_help_func-  displays information about the "help" command in a shell program.
  */
 void help_help_func(void)
 {
