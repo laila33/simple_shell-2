@@ -8,7 +8,7 @@ void help_help_func(void);
 
 
 /**
- * The function "help_all_func" displays a list of internal shell commands and provides instructions on
+ * help_all_func -displays a list of internal shell commands and provides instructions on
  * how to use them.
  */
 void help_all_func(void)
