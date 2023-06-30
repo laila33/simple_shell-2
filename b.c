@@ -5,7 +5,7 @@ int shell_cd(char **pars, char __attribute__((__unused__)) **front);
 int shell_help(char **pars, char __attribute__((__unused__)) **front);
 
 /**
- * The function "get_built_in_func" returns a pointer to a built-in function based on the given
+ * get_built_in_func - returns a pointer to a built-in function based on the given
  * command.
  * 
  * @param pars A pointer to an array of strings (char **pars) that represents the command line
@@ -40,7 +40,7 @@ int (*get_built_in_func(char *command))(char **pars, char **front)
 
 
 /**
- * The function `shell_exit` is used to exit the shell with a specified exit code.
+ * shell_exit - is used to exit the shell with a specified exit code.
  * 
  * @param pars A double pointer to a character array, which represents the command line arguments
  * passed to the function.
@@ -84,7 +84,7 @@ int shell_exit(char **pars, char **front)
 
 
 /**
- * The function `shell_cd` is used to change the current working directory in a shell program.
+ * shell_cd- is used to change the current working directory in a shell program.
  * 
  * @param pars An array of strings representing the command line arguments passed to the `shell_cd`
  * function. These arguments are used to determine the directory to change to.
@@ -167,7 +167,7 @@ int shell_cd(char **pars, char __attribute__((__unused__)) **front)
 }
 
 /**
- * The function `shell_help` provides help information for various shell commands.
+ * shell_help - provides help information for various shell commands.
  * 
  * @param pars An array of strings representing the command and its arguments.
  * @param __unused__ The `__unused__` attribute is used to indicate that a function parameter is
