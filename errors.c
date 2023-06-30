@@ -21,7 +21,7 @@ int generate_error(char **args, int err);
  */
 int num_length(int num)
 {
-	unsigned int num;
+	unsigned int numm;
 	int len = 1;
 
 	if (num < 0)
@@ -31,12 +31,12 @@ int num_length(int num)
 	}
 	else
 	{
-		num_= num;
+		num1= num;
 	}
-	while (num > 9)
+	while (num1 > 9)
 	{
 		len++;
-		num /= 10;
+		num1 /= 10;
 	}
 
 	return (len);
@@ -60,7 +60,7 @@ char *itoa_func(int num)
 {
 	char *buffer;
 	int len = num_length(num);
-	unsigned int num;
+	unsigned int numm;
 
 	buffer = malloc(sizeof(char) * (len + 1));
 	if (!buffer)
@@ -70,17 +70,17 @@ char *itoa_func(int num)
 
 	if (num < 0)
 	{
-		num = num * -1;
+		numm = num * -1;
 		buffer[0] = '-';
 	}
 	else
 	{
-		num = num;
+		numm = num;
 	}
 
 	len--;
 	do {
-		buffer[len] = (num % 10) + '0';
+		buffer[len] = (num1 % 10) + '0';
 		num /= 10;
 		len--;
 	} while (num > 0);
