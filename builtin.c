@@ -106,7 +106,7 @@ int shell_cd(char **pars, char __attribute__((__unused__)) **front)
 
 	if (pars[0])
 	{
-		if (*(pars[0]) == '-' || _strcmp(pars[0], "--") == 0)
+		if (*(pars[0]) == '-' || strcmp_func(pars[0], "--") == 0)
 		{
 			if ((pars[0][1] == '-' && pars[0][2] == '\0') ||
 					pars[0][1] == '\0')
