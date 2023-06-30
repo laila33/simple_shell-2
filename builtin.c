@@ -181,19 +181,19 @@ int shell_help(char **pars, char __attribute__((__unused__)) **front)
 {
 	if (!pars[0])
 		help_all_func();
-	else if (_strcmp(pars[0], "alias") == 0)
+	else if (strcmp_func(pars[0], "alias") == 0)
 		help_alias_func();
-	else if (_strcmp(pars[0], "cd") == 0)
+	else if (strcmp_func(pars[0], "cd") == 0)
 		help_cd_func();
-	else if (_strcmp(pars[0], "exit") == 0)
+	else if (strcmp_func(pars[0], "exit") == 0)
 		help_exit_func();
-	else if (_strcmp(pars[0], "env") == 0)
+	else if (strcmp_func(pars[0], "env") == 0)
 		help_env();
-	else if (_strcmp(pars[0], "setenv") == 0)
+	else if (strcmp_func(pars[0], "setenv") == 0)
 		help_set_env();
-	else if (_strcmp(pars[0], "unsetenv") == 0)
+	else if (strcmp_func(pars[0], "unsetenv") == 0)
 		help_unset_env();
-	else if (_strcmp(pars[0], "help") == 0)
+	else if (strcmp_func(pars[0], "help") == 0)
 		help_help_func();
 	else
 		write(STDERR_FILENO, name, strlen_func(name));
