@@ -27,11 +27,11 @@ int cant_func(char *f_path)
 	}
 
 	strcpy_func(e_e, name);
-	strcp_func(e_e, ": ");
-	strcp_func(e_e, h_str);
-	strcp_func(e_e, ": Can't open ");
-	strcp_func(e_e, f_path);
-	strcp_func(e_e, "\n");
+	strcpy_func(e_e, ": ");
+	strcpy_func(e_e, h_str);
+	strcpy_func(e_e, ": Can't open ");
+	strcpy_func(e_e, f_path);
+	strcpy_func(e_e, "\n");
 
 	free(h_str);
 	write(STDERR_FILENO, e_e, e);
