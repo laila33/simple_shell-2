@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 
 	if (argc != 1)
 	{
-		ret = proc_file_comm(argv[1], exe_ret);
+		ret = proc_func(argv[1], exe_ret);
 		collect_env();
 		collect_ls_alias(aliases);
 		return (*exe_ret);
