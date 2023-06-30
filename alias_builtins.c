@@ -140,7 +140,7 @@ char **update_aliases(char **pars)
 	int i;
 	char *new_value;
 
-	if (_strcmp(pars[0], "alias") == 0)
+	if (strcmp_func(pars[0], "alias") == 0)
 		return (pars);
 	for (i = 0; pars[i]; i++)
 	{
