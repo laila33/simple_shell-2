@@ -35,12 +35,12 @@ int shell_alias(char **pars, char __attribute__((__unused__)) **front)
 	for (i = 0; pars[i]; i++)
 	{
 		temp = aliases;
-		value = _strchr(pars[i], '=');
+		value = strchr_func(pars[i], '=');
 		if (!value)
 		{
 			while (temp)
 			{
-				if (_strcmp(pars[i], temp->name) == 0)
+				if (strcmp_func(pars[i], temp->name) == 0)
 				{
 					print_alias_func(temp);
 					break;
@@ -74,7 +74,7 @@ void set_alias_func(char *var_name, char *value)
 
 	*value = '\0';
 	value++;
-	len = strlen_func(value) - _strspn(value, "'\"");
+	len = strlen_func(value) - strspn_func(value, "'\"");
 	new_value = malloc(sizeof(char) * (len + 1));
 	if (!new_value)
 		return;
