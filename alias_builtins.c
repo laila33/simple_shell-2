@@ -1,70 +1,72 @@
-/*
- * File: builtin.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
+#include "shell_.h"
 
-#include "shell.h"
+int shell_alias(char **pars, char __attribute__((__unused__)) **front);
+void set_alias_func(char *var_name, char *value);
+void print_alias_func(alias_t *alias);
 
-int shellby_alias(char **args, char __attribute__((__unused__)) **front);
-void set_alias(char *var_name, char *value);
-void print_alias(alias_t *alias);
 
 /**
- * shellby_alias - Builtin command that either prints all aliases, specific
- * aliases, or sets an alias.
- * @args: An array of arguments.
- * @front: A double pointer to the beginning of args.
- *
- * Return: If an error occurs - -1.
- *         Otherwise - 0.
+ * The function `shell_alias` is used to manage aliases in a shell program, allowing users to view
+ * existing aliases or create new ones.
+ * 
+ * @param pars An array of strings representing the command and its arguments.
+ * @param __unused__ The `__unused__` attribute is used to indicate that a function parameter is
+ * intentionally unused. It is typically used to suppress compiler warnings about unused variables. In
+ * this case, the `__unused__` attribute is applied to the `front` parameter, indicating that it is not
+ * used in the function
+ * 
+ * @return an integer value.
  */
-int shellby_alias(char **args, char __attribute__((__unused__)) **front)
+int shell_alias(char **pars, char __attribute__((__unused__)) **front)
 {
 	alias_t *temp = aliases;
 	int i, ret = 0;
 	char *value;
 
-	if (!args[0])
+	if (!pars[0])
 	{
 		while (temp)
 		{
-			print_alias(temp);
+			print_alias_func(temp);
 			temp = temp->next;
 		}
 		return (ret);
 	}
-	for (i = 0; args[i]; i++)
+	for (i = 0; pars[i]; i++)
 	{
 		temp = aliases;
-		value = _strchr(args[i], '=');
+		value = _strchr(pars[i], '=');
 		if (!value)
 		{
 			while (temp)
 			{
-				if (_strcmp(args[i], temp->name) == 0)
+				if (_strcmp(pars[i], temp->name) == 0)
 				{
-					print_alias(temp);
+					print_alias_func(temp);
 					break;
 				}
 				temp = temp->next;
 			}
 			if (!temp)
-				ret = create_error(args + i, 1);
+				ret = generate_error(pars + i, 1);
 		}
 		else
-			set_alias(args[i], value);
+			set_alias_func(pars[i], value);
 	}
 	return (ret);
 }
 
+
 /**
- * set_alias - Will either set an existing alias 'name' with a new value,
- * 'value' or creates a new alias with 'name' and 'value'.
- * @var_name: Name of the alias.
- * @value: Value of the alias. First character is a '='.
+ * The function `set_alias_func` sets the value of a variable in a linked list of aliases.
+ * 
+ * @param var_name A pointer to a character array representing the name of the variable to set the
+ * alias for.
+ * @param value The `value` parameter is a string that represents the new value for the alias.
+ * 
+ * @return The function does not explicitly return a value.
  */
-void set_alias(char *var_name, char *value)
+void set_alias_func(char *var_name, char *value)
 {
 	alias_t *temp = aliases;
 	int len, j, k;
@@ -72,7 +74,7 @@ void set_alias(char *var_name, char *value)
 
 	*value = '\0';
 	value++;
-	len = _strlen(value) - _strspn(value, "'\"");
+	len = strlen_func(value) - _strspn(value, "'\"");
 	new_value = malloc(sizeof(char) * (len + 1));
 	if (!new_value)
 		return;
@@ -93,60 +95,69 @@ void set_alias(char *var_name, char *value)
 		temp = temp->next;
 	}
 	if (!temp)
-		add_alias_end(&aliases, var_name, new_value);
+		end_alias(&aliases, var_name, new_value);
 }
 
+
 /**
- * print_alias - Prints the alias in the format name='value'.
- * @alias: Pointer to an alias.
+ * The function "print_alias_func" prints the name and value of an alias in the format
+ * "name='value'\n".
+ * 
+ * @param alias The parameter "alias" is a pointer to a structure of type "alias_t".
+ * 
+ * @return nothing (void).
  */
-void print_alias(alias_t *alias)
+void print_alias_func(alias_t *alias)
 {
 	char *alias_string;
-	int len = _strlen(alias->name) + _strlen(alias->value) + 4;
+	int len = strlen_func(alias->name) + strlen_func(alias->value) + 4;
 
 	alias_string = malloc(sizeof(char) * (len + 1));
 	if (!alias_string)
 		return;
-	_strcpy(alias_string, alias->name);
-	_strcat(alias_string, "='");
-	_strcat(alias_string, alias->value);
-	_strcat(alias_string, "'\n");
+	strcpy_func(alias_string, alias->name);
+	strcat_func(alias_string, "='");
+	strcat_func(alias_string, alias->value);
+	strcat_func(alias_string, "'\n");
 
 	write(STDOUT_FILENO, alias_string, len);
 	free(alias_string);
 }
+
+
 /**
- * replace_aliases - Goes through the arguments and replace any matching alias
- * with their value.
- * @args: 2D pointer to the arguments.
- *
- * Return: 2D pointer to the arguments.
+ * The function updates aliases in a given array of strings by replacing any alias names with their
+ * corresponding values.
+ * 
+ * @param pars The parameter "pars" is a pointer to a pointer to a character array. It is used to store
+ * a list of command line arguments.
+ * 
+ * @return the updated array of strings, `pars`.
  */
-char **replace_aliases(char **args)
+char **update_aliases(char **pars)
 {
 	alias_t *temp;
 	int i;
 	char *new_value;
 
-	if (_strcmp(args[0], "alias") == 0)
-		return (args);
-	for (i = 0; args[i]; i++)
+	if (_strcmp(pars[0], "alias") == 0)
+		return (pars);
+	for (i = 0; pars[i]; i++)
 	{
 		temp = aliases;
 		while (temp)
 		{
-			if (_strcmp(args[i], temp->name) == 0)
+			if (_strcmp(pars[i], temp->name) == 0)
 			{
-				new_value = malloc(sizeof(char) * (_strlen(temp->value) + 1));
+				new_value = malloc(sizeof(char) * (strlen_func(temp->value) + 1));
 				if (!new_value)
 				{
-					free_args(args, args);
+					collect_parms(pars, pars);
 					return (NULL);
 				}
-				_strcpy(new_value, temp->value);
-				free(args[i]);
-				args[i] = new_value;
+				strcpy_func(new_value, temp->value);
+				free(pars[i]);
+				pars[i] = new_value;
 				i--;
 				break;
 			}
@@ -154,6 +165,6 @@ char **replace_aliases(char **args)
 		}
 	}
 
-	return (args);
+	return (pars);
 }
 

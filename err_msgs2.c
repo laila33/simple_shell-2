@@ -1,78 +1,88 @@
-/*
- * File: err_msgs2.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
+#include "shell_.h"
 
-#include "shell.h"
-
-char *error_126(char **args);
-char *error_127(char **args);
+char *err_126(char **pars);
+char *err_127(char **pars);
 
 /**
- * error_126 - Creates an error message for permission denied failures.
- * @args: An array of arguments passed to the command.
+ * err_126 - Creates an err message for permission denied failures.
+ * @pars: An array of arguments passed to the command.
  *
- * Return: The error string.
+ * Return: The err string.
  */
-char *error_126(char **args)
+/**
+ * The function generates an error message with a specific format and returns it.
+ * 
+ * @param pars An array of strings (char pointers)
+ * 
+ * @return a pointer to a character array (string) that contains an error message.
+ */
+char *err_126(char **pars)
 {
-	char *error, *hist_str;
+	char *err, *hist_str;
 	int len;
 
-	hist_str = _itoa(hist);
+	hist_str = itoa_func(x);
 	if (!hist_str)
 		return (NULL);
 
-	len = _strlen(name) + _strlen(hist_str) + _strlen(args[0]) + 24;
-	error = malloc(sizeof(char) * (len + 1));
-	if (!error)
+	len = strlen_func(name) + strlen_func(hist_str) + strlen_func(pars[0]) + 24;
+	err = malloc(sizeof(char) * (len + 1));
+	if (!err)
 	{
 		free(hist_str);
 		return (NULL);
 	}
 
-	_strcpy(error, name);
-	_strcat(error, ": ");
-	_strcat(error, hist_str);
-	_strcat(error, ": ");
-	_strcat(error, args[0]);
-	_strcat(error, ": Permission denied\n");
+	strcpy_func(err, name);
+	strcat_func(err, ": ");
+	strcat_func(err, hist_str);
+	strcat_func(err, ": ");
+	strcat_func(err, pars[0]);
+	strcat_func(err, ": Permission denied\n");
 
 	free(hist_str);
-	return (error);
+	return (err);
 }
 
 /**
- * error_127 - Creates an error message for command not found failures.
+ * err_127 - Creates an error message for command not found failures.
  * @args: An array of arguments passed to the command.
  *
  * Return: The error string.
  */
-char *error_127(char **args)
+/**
+ * The function `err_127` generates an error message with the given arguments and returns it as a
+ * string.
+ * 
+ * @param args args is a pointer to a pointer to a character. It is an array of strings, where each
+ * string represents an argument.
+ * 
+ * @return a pointer to a character array (string) that contains an error message.
+ */
+char *err_127(char **args)
 {
-	char *error, *hist_str;
+	char *err, *hist_str;
 	int len;
 
-	hist_str = _itoa(hist);
+	hist_str = itoa_func(x);
 	if (!hist_str)
 		return (NULL);
 
-	len = _strlen(name) + _strlen(hist_str) + _strlen(args[0]) + 16;
-	error = malloc(sizeof(char) * (len + 1));
-	if (!error)
+	len = strlen_func(name) + strlen_func(hist_str) + strlen_func(args[0]) + 16;
+	err = malloc(sizeof(char) * (len + 1));
+	if (!err)
 	{
 		free(hist_str);
 		return (NULL);
 	}
 
-	_strcpy(error, name);
-	_strcat(error, ": ");
-	_strcat(error, hist_str);
-	_strcat(error, ": ");
-	_strcat(error, args[0]);
-	_strcat(error, ": not found\n");
+	strcpy_func(err, name);
+	strcat_func(err, ": ");
+	strcat_func(err, hist_str);
+	strcat_func(err, ": ");
+	strcat_func(err, args[0]);
+	strcat_func(err, ": not found\n");
 
 	free(hist_str);
-	return (error);
+	return (err);
 }

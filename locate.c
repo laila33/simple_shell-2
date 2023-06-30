@@ -1,79 +1,73 @@
-/*
- * File: locate.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
+#include "shell_.h"
 
-#include "shell.h"
-
-char *fill_path_dir(char *path);
+char *set_path_dir(char *path);
 list_t *get_path_dir(char *path);
 
 /**
- * get_location - Locates a command in the PATH.
- * @command: The command to locate.
+ * get_path_func - Locates a cmd in the PATH.
+ * @cmd: The cmd to locate.
  *
- * Return: If an error occurs or the command cannot be located - NULL.
- *         Otherwise - the full pathname of the command.
+ * Return: If an error occurs or the cmd cannot be located - NULL.
+ *         Otherwise - the full pathname of the cmd.
  */
-char *get_location(char *command)
+char *get_path_func(char *cmd)
 {
-	char **path, *temp;
-	list_t *dirs, *head;
+	char **path, *tmp;
+	list_t *direcs, *top;
 	struct stat st;
 
-	path = _getenv("PATH");
+	path = get_env("PATH");
 	if (!path || !(*path))
 		return (NULL);
 
-	dirs = get_path_dir(*path + 5);
-	head = dirs;
+	direcs = get_path_dir(*path + 5);
+	top = direcs;
 
-	while (dirs)
+	while (direcs)
 	{
-		temp = malloc(_strlen(dirs->dir) + _strlen(command) + 2);
-		if (!temp)
+		tmp = malloc(strlen_func(direcs->dir) + strlen_func(cmd) + 2);
+		if (!tmp)
 			return (NULL);
 
-		_strcpy(temp, dirs->dir);
-		_strcat(temp, "/");
-		_strcat(temp, command);
+		strcpy_func(tmp, direcs->dir);
+		strcat_func(tmp, "/");
+		strcat_func(tmp, cmd);
 
-		if (stat(temp, &st) == 0)
+		if (stat(tmp, &st) == 0)
 		{
-			free_list(head);
-			return (temp);
+			collect_e_list(top);
+			return (tmp);
 		}
 
-		dirs = dirs->next;
-		free(temp);
+		direcs = direcs->next;
+		free(tmp);
 	}
 
-	free_list(head);
+	collect_e_list(top);
 
 	return (NULL);
 }
 
 /**
- * fill_path_dir - Copies path but also replaces leading/sandwiched/trailing
+ * set_path_dir - Copies path but also replaces leading/sandwiched/trailing
  *		   colons (:) with current working directory.
  * @path: The colon-separated list of directories.
  *
  * Return: A copy of path with any leading/sandwiched/trailing colons replaced
  *	   with the current working directory.
  */
-char *fill_path_dir(char *path)
+char *set_path_dir(char *path)
 {
 	int i, length = 0;
 	char *path_copy, *pwd;
 
-	pwd = *(_getenv("PWD")) + 4;
+	pwd = *(get_env("PWD")) + 4;
 	for (i = 0; path[i]; i++)
 	{
 		if (path[i] == ':')
 		{
 			if (path[i + 1] == ':' || i == 0 || path[i + 1] == '\0')
-				length += _strlen(pwd) + 1;
+				length += strlen_func(pwd) + 1;
 			else
 				length++;
 		}
@@ -90,20 +84,20 @@ char *fill_path_dir(char *path)
 		{
 			if (i == 0)
 			{
-				_strcat(path_copy, pwd);
-				_strcat(path_copy, ":");
+				strcat_func(path_copy, pwd);
+				strcat_func(path_copy, ":");
 			}
 			else if (path[i + 1] == ':' || path[i + 1] == '\0')
 			{
-				_strcat(path_copy, ":");
-				_strcat(path_copy, pwd);
+				strcat_func(path_copy, ":");
+				strcat_func(path_copy, pwd);
 			}
 			else
-				_strcat(path_copy, ":");
+				strcat_func(path_copy, ":");
 		}
 		else
 		{
-			_strncat(path_copy, &path[i], 1);
+			strncat_func(path_copy, &path[i], 1);
 		}
 	}
 	return (path_copy);
@@ -120,21 +114,21 @@ list_t *get_path_dir(char *path)
 {
 	int index;
 	char **dirs, *path_copy;
-	list_t *head = NULL;
+	list_t *top = NULL;
 
-	path_copy = fill_path_dir(path);
+	path_copy = set_path_dir(path);
 	if (!path_copy)
 		return (NULL);
-	dirs = _strtok(path_copy, ":");
+	dirs = strtok_func(path_copy, ":");
 	free(path_copy);
 	if (!dirs)
 		return (NULL);
 
 	for (index = 0; dirs[index]; index++)
 	{
-		if (add_node_end(&head, dirs[index]) == NULL)
+		if (end_node(&top, dirs[index]) == NULL)
 		{
-			free_list(head);
+			collect_e_list(top);
 			free(dirs);
 			return (NULL);
 		}
@@ -142,5 +136,5 @@ list_t *get_path_dir(char *path)
 
 	free(dirs);
 
-	return (head);
+	return (top);
 }

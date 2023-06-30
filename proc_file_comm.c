@@ -14,11 +14,11 @@ int cant_func(char *f_path)
 	char *e_e, *h_str;
 	int e;
 
-	h_str = _itoa(x);
+	h_str = itoa_func(x);
 	if (!h_str)
 		return (127);
 
-	e = strlen_func(y) + strlen_func(h_str) + strlen_func(f_path) + 16;
+	e = strlen_func(name) + strlen_func(h_str) + strlen_func(f_path) + 16;
 	e_e = malloc(sizeof(char) * (e + 1));
 	if (!e_e)
 	{
@@ -26,12 +26,12 @@ int cant_func(char *f_path)
 		return (127);
 	}
 
-	strcpy_func(e_e, y);
-	strcpy_func(e_e, ": ");
-	strcpy_func(e_e, h_str);
-	strcpy_func(e_e, ": Can't open ");
-	strcpy_func(e_e, f_path);
-	strcpy_func(e_e, "\n");
+	strcpy_func(e_e, name);
+	strcp_func(e_e, ": ");
+	strcp_func(e_e, h_str);
+	strcp_func(e_e, ": Can't open ");
+	strcp_func(e_e, f_path);
+	strcp_func(e_e, "\n");
 
 	free(h_str);
 	write(STDERR_FILENO, e_e, e);
@@ -72,7 +72,7 @@ int proc_func(char *f_path, int *exe_e)
 			return (*exe_e);
 		buffer[read_d] = '\0';
 		sizee += read_d;
-		l_count = _realloc(l_count, oldd, sizee);
+		l_count = re_alloc(l_count, oldd, sizee);
 		strcpy_func(l_count, buffer);
 		oldd = sizee;
 	} while (read_d);
@@ -87,16 +87,16 @@ int proc_func(char *f_path, int *exe_e)
 				l_count[j] = ' ';
 		}
 	}
-	variable_replacement(&l_count, exe_e);
-	handle_line(&l_count, sizee);
+	variable_repl_func(&l_count, exe_e);
+	handle_line_func(&l_count, sizee);
 	arg_s = strtok_func(l_count, " ");
 	free(l_count);
 	if (!arg_s)
 		return (0);
-	if (check_args(arg_s) != 0)
+	if (check_parms(arg_s) != 0)
 	{
 		*exe_e = 2;
-		free_args(arg_s, arg_s);
+		collect_parms(arg_s, arg_s);
 		return (*exe_e);
 	}
 	front_f = arg_s;
@@ -107,13 +107,13 @@ int proc_func(char *f_path, int *exe_e)
 		{
 			free(arg_s[j]);
 			arg_s[j] = NULL;
-			result = call_args(arg_s, front_f, exe_e);
+			result = call_parms(arg_s, front_f, exe_e);
 			arg_s = &arg_s[++j];
 			j = 0;
 		}
 	}
 
-	result = call_args(arg_s, front_f, exe_e);
+	result = call_parms(arg_s, front_f, exe_e);
 
 	free(front_f);
 	return (result);

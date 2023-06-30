@@ -1,32 +1,31 @@
-/*
- * File: builtin.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
-
-#include "shell.h"
-int (*get_builtin(char *command))(char **args, char **front);
-int shellby_exit(char **args, char **front);
-int shellby_cd(char **args, char __attribute__((__unused__)) **front);
-int shellby_help(char **args, char __attribute__((__unused__)) **front);
+#include "shell_.h"
+int (*get_built_in_func(char *command))(char **pars, char **front);
+int shell_exit(char **pars, char **front);
+int shell_cd(char **pars, char __attribute__((__unused__)) **front);
+int shell_help(char **pars, char __attribute__((__unused__)) **front);
 
 /**
- * get_builtin - Matches a command with a corresponding
- *               shellby builtin function.
- * @command: The command to match.
- *
- * Return: A function pointer to the corresponding builtin.
+ * The function "get_built_in_func" returns a pointer to a built-in function based on the given
+ * command.
+ * 
+ * @param pars A pointer to an array of strings (char **pars) that represents the command line
+ * arguments passed to the function.
+ * @param front The "front" parameter is a pointer to a pointer to a string. It is used to keep track
+ * of the front of the command string as it is being parsed.
+ * 
+ * @return The function `get_built_in_func` returns a pointer to a function that takes two parameters:
+ * `char **pars` and `char **front`.
  */
-int (*get_builtin(char *command))(char **args, char **front)
+int (*get_built_in_func(char *command))(char **pars, char **front)
 {
 	builtin_t funcs[] = {
-		{ "exit", shellby_exit },
-		{ "env", shellby_env },
-		{ "setenv", shellby_setenv },
-		{ "unsetenv", shellby_unsetenv },
-		{ "cd", shellby_cd },
-		{ "alias", shellby_alias },
-		{ "help", shellby_help },
+		{ "exit", shell_exit },
+		{ "env", shell_env_func },
+		{ "setenv", shell_set_env_func },
+		{ "unsetenv", shell_unset_env_func },
+		{ "cd", shell_cd },
+		{ "alias", shell_alias },
+		{ "help", shell_help },
 		{ NULL, NULL }
 	};
 	int i;
@@ -39,36 +38,35 @@ int (*get_builtin(char *command))(char **args, char **front)
 	return (funcs[i].f);
 }
 
+
 /**
- * shellby_exit - Causes normal process termination
- *                for the shellby shell.
- * @args: An array of arguments containing the exit value.
- * @front: A double pointer to the beginning of args.
- *
- * Return: If there are no arguments - -3.
- *         If the given exit value is invalid - 2.
- *         O/w - exits with the given status value.
- *
- * Description: Upon returning -3, the program exits back in the main function.
+ * The function `shell_exit` is used to exit the shell with a specified exit code.
+ * 
+ * @param pars A double pointer to a character array, which represents the command line arguments
+ * passed to the function.
+ * @param front The `front` parameter is a pointer to a pointer to a character array. It is used to
+ * store the front part of the command line input, which is the part before the command itself.
+ * 
+ * @return the value of the variable "num".
  */
-int shellby_exit(char **args, char **front)
+int shell_exit(char **pars, char **front)
 {
 	int i, len_of_int = 10;
 	unsigned int num = 0, max = 1 << (sizeof(int) * 8 - 1);
 
-	if (args[0])
+	if (pars[0])
 	{
-		if (args[0][0] == '+')
+		if (pars[0][0] == '+')
 		{
 			i = 1;
 			len_of_int++;
 		}
-		for (; args[0][i]; i++)
+		for (; pars[0][i]; i++)
 		{
-			if (i <= len_of_int && args[0][i] >= '0' && args[0][i] <= '9')
-				num = (num * 10) + (args[0][i] - '0');
+			if (i <= len_of_int && pars[0][i] >= '0' && pars[0][i] <= '9')
+				num = (num * 10) + (pars[0][i] - '0');
 			else
-				return (create_error(--args, 2));
+				return (generate_error(--pars, 2));
 		}
 	}
 	else
@@ -76,24 +74,27 @@ int shellby_exit(char **args, char **front)
 		return (-3);
 	}
 	if (num > max - 1)
-		return (create_error(--args, 2));
-	args -= 1;
-	free_args(args, front);
-	free_env();
-	free_alias_list(aliases);
+		return (generate_error(--pars, 2));
+	pars -= 1;
+	collect_parms(pars, front);
+	collect_env();
+	collect_ls_alias(aliases);
 	exit(num);
 }
 
+
 /**
- * shellby_cd - Changes the current directory of the shellby process.
- * @args: An array of arguments.
- * @front: A double pointer to the beginning of args.
- *
- * Return: If the given string is not a directory - 2.
- *         If an error occurs - -1.
- *         Otherwise - 0.
+ * The function `shell_cd` is used to change the current working directory in a shell program.
+ * 
+ * @param pars An array of strings representing the command line arguments passed to the `shell_cd`
+ * function. These arguments are used to determine the directory to change to.
+ * @param __unused__ `__unused__` is an attribute that is used to indicate that a function parameter is
+ * intentionally unused. It is typically used to suppress compiler warnings about unused variables. In
+ * this case, `__unused__` is applied to the `front` parameter, indicating that it is not used in the `
+ * 
+ * @return an integer value.
  */
-int shellby_cd(char **args, char __attribute__((__unused__)) **front)
+int shell_cd(char **pars, char __attribute__((__unused__)) **front)
 {
 	char **dir_info, *new_line = "\n";
 	char *oldpwd = NULL, *pwd = NULL;
@@ -103,38 +104,38 @@ int shellby_cd(char **args, char __attribute__((__unused__)) **front)
 	if (!oldpwd)
 		return (-1);
 
-	if (args[0])
+	if (pars[0])
 	{
-		if (*(args[0]) == '-' || _strcmp(args[0], "--") == 0)
+		if (*(pars[0]) == '-' || _strcmp(pars[0], "--") == 0)
 		{
-			if ((args[0][1] == '-' && args[0][2] == '\0') ||
-					args[0][1] == '\0')
+			if ((pars[0][1] == '-' && pars[0][2] == '\0') ||
+					pars[0][1] == '\0')
 			{
-				if (_getenv("OLDPWD") != NULL)
-					(chdir(*_getenv("OLDPWD") + 7));
+				if (get_env("OLDPWD") != NULL)
+					(chdir(*get_env("OLDPWD") + 7));
 			}
 			else
 			{
 				free(oldpwd);
-				return (create_error(args, 2));
+				return (generate_error(pars, 2));
 			}
 		}
 		else
 		{
-			if (stat(args[0], &dir) == 0 && S_ISDIR(dir.st_mode)
+			if (stat(pars[0], &dir) == 0 && S_ISDIR(dir.st_mode)
 					&& ((dir.st_mode & S_IXUSR) != 0))
-				chdir(args[0]);
+				chdir(pars[0]);
 			else
 			{
 				free(oldpwd);
-				return (create_error(args, 2));
+				return (generate_error(pars, 2));
 			}
 		}
 	}
 	else
 	{
-		if (_getenv("HOME") != NULL)
-			chdir(*(_getenv("HOME")) + 5);
+		if (get_env("HOME") != NULL)
+			chdir(*(get_env("HOME")) + 5);
 	}
 
 	pwd = getcwd(pwd, 0);
@@ -147,16 +148,16 @@ int shellby_cd(char **args, char __attribute__((__unused__)) **front)
 
 	dir_info[0] = "OLDPWD";
 	dir_info[1] = oldpwd;
-	if (shellby_setenv(dir_info, dir_info) == -1)
+	if (shell_set_env_func(dir_info, dir_info) == -1)
 		return (-1);
 
 	dir_info[0] = "PWD";
 	dir_info[1] = pwd;
-	if (shellby_setenv(dir_info, dir_info) == -1)
+	if (shell_set_env_func(dir_info, dir_info) == -1)
 		return (-1);
-	if (args[0] && args[0][0] == '-' && args[0][1] != '-')
+	if (pars[0] && pars[0][0] == '-' && pars[0][1] != '-')
 	{
-		write(STDOUT_FILENO, pwd, _strlen(pwd));
+		write(STDOUT_FILENO, pwd, strlen_func(pwd));
 		write(STDOUT_FILENO, new_line, 1);
 	}
 	free(oldpwd);
@@ -166,33 +167,36 @@ int shellby_cd(char **args, char __attribute__((__unused__)) **front)
 }
 
 /**
- * shellby_help - Displays information about shellby builtin commands.
- * @args: An array of arguments.
- * @front: A pointer to the beginning of args.
- *
- * Return: If an error occurs - -1.
- *         Otherwise - 0.
+ * The function `shell_help` provides help information for various shell commands.
+ * 
+ * @param pars An array of strings representing the command and its arguments.
+ * @param __unused__ The `__unused__` attribute is used to indicate that a function parameter is
+ * intentionally left unused. It is a way to suppress compiler warnings about unused variables. In this
+ * case, the `__unused__` attribute is applied to the `front` parameter, indicating that it is not used
+ * in the
+ * 
+ * @return 0.
  */
-int shellby_help(char **args, char __attribute__((__unused__)) **front)
+int shell_help(char **pars, char __attribute__((__unused__)) **front)
 {
-	if (!args[0])
-		help_all();
-	else if (_strcmp(args[0], "alias") == 0)
-		help_alias();
-	else if (_strcmp(args[0], "cd") == 0)
-		help_cd();
-	else if (_strcmp(args[0], "exit") == 0)
-		help_exit();
-	else if (_strcmp(args[0], "env") == 0)
+	if (!pars[0])
+		help_all_func();
+	else if (_strcmp(pars[0], "alias") == 0)
+		help_alias_func();
+	else if (_strcmp(pars[0], "cd") == 0)
+		help_cd_func();
+	else if (_strcmp(pars[0], "exit") == 0)
+		help_exit_func();
+	else if (_strcmp(pars[0], "env") == 0)
 		help_env();
-	else if (_strcmp(args[0], "setenv") == 0)
-		help_setenv();
-	else if (_strcmp(args[0], "unsetenv") == 0)
-		help_unsetenv();
-	else if (_strcmp(args[0], "help") == 0)
-		help_help();
+	else if (_strcmp(pars[0], "setenv") == 0)
+		help_set_env();
+	else if (_strcmp(pars[0], "unsetenv") == 0)
+		help_unset_env();
+	else if (_strcmp(pars[0], "help") == 0)
+		help_help_func();
 	else
-		write(STDERR_FILENO, name, _strlen(name));
+		write(STDERR_FILENO, name, strlen_func(name));
 
 	return (0);
 }

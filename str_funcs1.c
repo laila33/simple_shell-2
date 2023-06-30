@@ -1,5 +1,3 @@
-
-
 #include "shell_.h"
 
 int strlen_func(const char *ptr);

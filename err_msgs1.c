@@ -1,177 +1,210 @@
-/*
- * File: err_msgs1.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
+#include "shell_.h"
 
-#include "shell.h"
-
-char *error_env(char **args);
-char *error_1(char **args);
-char *error_2_exit(char **args);
-char *error_2_cd(char **args);
-char *error_2_syntax(char **args);
+char *err_env_func(char **pars);
+char *err_1(char **pars);
+char *err_2_exit(char **pars);
+char *err_2_cd(char **pars);
+char *err_2_syntax(char **pars);
 /**
- * error_env - Creates an error message for shellby_env errors.
- * @args: An array of arguments passed to the command.
+ * err_env_func - Creates an error message for shell_env_func errors.
+ * @pars: An array of arguments passed to the command.
  *
  * Return: The error string.
  */
-char *error_env(char **args)
+/**
+ * The function `err_env_func` generates an error message string related to adding or removing from the
+ * environment.
+ * 
+ * @param pars An array of strings (char pointers)
+ * 
+ * @return a pointer to a character array (string) that represents an error message.
+ */
+char *err_env_func(char **pars)
 {
-	char *error, *hist_str;
+	char *err, *hist_str;
 	int len;
 
-	hist_str = _itoa(hist);
+	hist_str = itoa_func(x);
 	if (!hist_str)
 		return (NULL);
 
-	args--;
-	len = _strlen(name) + _strlen(hist_str) + _strlen(args[0]) + 45;
-	error = malloc(sizeof(char) * (len + 1));
-	if (!error)
+	pars--;
+	len = strlen_func(name) + strlen_func(hist_str) + strlen_func(pars[0]) + 45;
+	err = malloc(sizeof(char) * (len + 1));
+	if (!err)
 	{
 		free(hist_str);
 		return (NULL);
 	}
 
-	_strcpy(error, name);
-	_strcat(error, ": ");
-	_strcat(error, hist_str);
-	_strcat(error, ": ");
-	_strcat(error, args[0]);
-	_strcat(error, ": Unable to add/remove from environment\n");
+	strcpy_func(err, name);
+	strcat_func(err, ": ");
+	strcat_func(err, hist_str);
+	strcat_func(err, ": ");
+	strcat_func(err, pars[0]);
+	strcat_func(err, ": Unable to add/remove from environment\n");
 
 	free(hist_str);
-	return (error);
+	return (err);
 }
 
 /**
- * error_1 - Creates an error message for shellby_alias errors.
- * @args: An array of arguments passed to the command.
+ * err_1 - Creates an err message for shell_alias errors.
+ * @pars: An array of arguments passed to the command.
  *
  * Return: The error string.
  */
-char *error_1(char **args)
+/**
+ * The function generates an error message for a missing alias.
+ * 
+ * @param pars The parameter "pars" is a pointer to a pointer to a character array. It is expected to
+ * contain a list of strings, with the first string being the name of an alias.
+ * 
+ * @return a dynamically allocated string that contains an error message.
+ */
+char *err_1(char **pars)
 {
-	char *error;
+	char *err;
 	int len;
 
-	len = _strlen(name) + _strlen(args[0]) + 13;
-	error = malloc(sizeof(char) * (len + 1));
-	if (!error)
+	len = strlen_func(name) + strlen_func(pars[0]) + 13;
+	err = malloc(sizeof(char) * (len + 1));
+	if (!err)
 		return (NULL);
 
-	_strcpy(error, "alias: ");
-	_strcat(error, args[0]);
-	_strcat(error, " not found\n");
+	strcpy_func(err, "alias: ");
+	strcat_func(err, pars[0]);
+	strcat_func(err, " not found\n");
 
-	return (error);
+	return (err);
 }
 
 /**
- * error_2_exit - Creates an error message for shellby_exit errors.
- * @args: An array of arguments passed to the command.
+ * err_2_exit - Creates an error message for shell_exit errors.
+ * @pars: An array of arguments passed to the command.
  *
  * Return: The error string.
  */
-char *error_2_exit(char **args)
+/**
+ * The function `err_2_exit` generates an error message string for an illegal number argument passed to
+ * the `exit` function.
+ * 
+ * @param pars An array of strings (char pointers)
+ * 
+ * @return a pointer to a character array (string) that contains an error message.
+ */
+char *err_2_exit(char **pars)
 {
-	char *error, *hist_str;
+	char *err, *hist_str;
 	int len;
 
-	hist_str = _itoa(hist);
+	hist_str = itoa_func(x);
 	if (!hist_str)
 		return (NULL);
 
-	len = _strlen(name) + _strlen(hist_str) + _strlen(args[0]) + 27;
-	error = malloc(sizeof(char) * (len + 1));
-	if (!error)
+	len = strlen_func(name) + strlen_func(hist_str) + strlen_func(pars[0]) + 27;
+	err = malloc(sizeof(char) * (len + 1));
+	if (!err)
 	{
 		free(hist_str);
 		return (NULL);
 	}
 
-	_strcpy(error, name);
-	_strcat(error, ": ");
-	_strcat(error, hist_str);
-	_strcat(error, ": exit: Illegal number: ");
-	_strcat(error, args[0]);
-	_strcat(error, "\n");
+	strcpy_func(err, name);
+	strcat_func(err, ": ");
+	strcat_func(err, hist_str);
+	strcat_func(err, ": exit: Illegal number: ");
+	strcat_func(err, pars[0]);
+	strcat_func(err, "\n");
 
 	free(hist_str);
-	return (error);
+	return (err);
 }
 
 /**
- * error_2_cd - Creates an error message for shellby_cd errors.
- * @args: An array of arguments passed to the command.
+ * err_2_cd - Creates an error message for shell_cd errors.
+ * @pars: An array of arguments passed to the command.
  *
  * Return: The error string.
  */
-char *error_2_cd(char **args)
+/**
+ * The function `err_2_cd` generates an error message for the `cd` command in a shell program.
+ * 
+ * @param pars A double pointer to a character array (string array)
+ * 
+ * @return a pointer to a character array (string).
+ */
+char *err_2_cd(char **pars)
 {
-	char *error, *hist_str;
+	char *err, *hist_str;
 	int len;
 
-	hist_str = _itoa(hist);
+	hist_str = itoa_func(x);
 	if (!hist_str)
 		return (NULL);
 
-	if (args[0][0] == '-')
-		args[0][2] = '\0';
-	len = _strlen(name) + _strlen(hist_str) + _strlen(args[0]) + 24;
-	error = malloc(sizeof(char) * (len + 1));
-	if (!error)
+	if (pars[0][0] == '-')
+		pars[0][2] = '\0';
+	len = strlen_func(name) + strlen_func(hist_str) + strlen_func(pars[0]) + 24;
+	err = malloc(sizeof(char) * (len + 1));
+	if (!err)
 	{
 		free(hist_str);
 		return (NULL);
 	}
 
-	_strcpy(error, name);
-	_strcat(error, ": ");
-	_strcat(error, hist_str);
-	if (args[0][0] == '-')
-		_strcat(error, ": cd: Illegal option ");
+	strcpy_func(err, name);
+	strcat_func(err, ": ");
+	strcat_func(err, hist_str);
+	if (pars[0][0] == '-')
+		strcat_func(err, ": cd: Illegal option ");
 	else
-		_strcat(error, ": cd: can't cd to ");
-	_strcat(error, args[0]);
-	_strcat(error, "\n");
+		strcat_func(err, ": cd: can't cd to ");
+	strcat_func(err, pars[0]);
+	strcat_func(err, "\n");
 
 	free(hist_str);
-	return (error);
+	return (err);
 }
 
 /**
- * error_2_syntax - Creates an error message for syntax errors.
- * @args: An array of arguments passed to the command.
+ * err_2_syntax - Creates an error message for syntax errors.
+ * @pars: An array of arguments passed to the command.
  *
  * Return: The error string.
  */
-char *error_2_syntax(char **args)
+/**
+ * The function `err_2_syntax` generates an error message for a syntax error, including the name of the
+ * function, a history string, and the unexpected token.
+ * 
+ * @param pars An array of strings (char pointers)
+ * 
+ * @return a pointer to a character array (string) that represents an error message.
+ */
+char *err_2_syntax(char **pars)
 {
-	char *error, *hist_str;
+	char *err, *hist_str;
 	int len;
 
-	hist_str = _itoa(hist);
+	hist_str = itoa_func(x);
 	if (!hist_str)
 		return (NULL);
 
-	len = _strlen(name) + _strlen(hist_str) + _strlen(args[0]) + 33;
-	error = malloc(sizeof(char) * (len + 1));
-	if (!error)
+	len = strlen_func(name) + strlen_func(hist_str) + strlen_func(pars[0]) + 33;
+	err = malloc(sizeof(char) * (len + 1));
+	if (!err)
 	{
 		free(hist_str);
 		return (NULL);
 	}
 
-	_strcpy(error, name);
-	_strcat(error, ": ");
-	_strcat(error, hist_str);
-	_strcat(error, ": Syntax error: \"");
-	_strcat(error, args[0]);
-	_strcat(error, "\" unexpected\n");
+	strcpy_func(err, name);
+	strcat_func(err, ": ");
+	strcat_func(err, hist_str);
+	strcat_func(err, ": Syntax error: \"");
+	strcat_func(err, pars[0]);
+	strcat_func(err, "\" unexpected\n");
 
 	free(hist_str);
-	return (error);
+	return (err);
 }

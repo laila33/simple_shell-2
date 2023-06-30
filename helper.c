@@ -1,22 +1,16 @@
-/*
- * File: helper.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
+#include "shell_.h"
 
-#include "shell.h"
-
-void free_args(char **args, char **front);
-char *get_pid(void);
+void collect_parms(char **args, char **front);
+char *get_p_id(void);
 char *get_env_value(char *beginning, int len);
-void variable_replacement(char **args, int *exe_ret);
+void variable_repl_func(char **args, int *exe_ret);
 
 /**
- * free_args - Frees up memory taken by args.
+ * collect_parms - Frees up memory taken by args.
  * @args: A null-terminated double pointer containing commands/arguments.
  * @front: A double pointer to the beginning of args.
  */
-void free_args(char **args, char **front)
+void collect_parms(char **args, char **front)
 {
 	size_t i;
 
@@ -27,7 +21,7 @@ void free_args(char **args, char **front)
 }
 
 /**
- * get_pid - Gets the current process ID.
+ * get_p_id - Gets the current process ID.
  * Description: Opens the stat file, a space-delimited file containing
  *              information about the current process. The PID is the
  *              first word in the file. The function reads the PID into
@@ -35,7 +29,7 @@ void free_args(char **args, char **front)
  *
  * Return: The current process ID or NULL on failure.
  */
-char *get_pid(void)
+char *get_p_id(void)
 {
 	size_t i = 0;
 	char *buffer;
@@ -81,9 +75,9 @@ char *get_env_value(char *beginning, int len)
 	if (!var)
 		return (NULL);
 	var[0] = '\0';
-	_strncat(var, beginning, len);
+	strncat_func(var, beginning, len);
 
-	var_addr = _getenv(var);
+	var_addr = get_env(var);
 	free(var);
 	if (var_addr)
 	{
@@ -91,16 +85,16 @@ char *get_env_value(char *beginning, int len)
 		while (*temp != '=')
 			temp++;
 		temp++;
-		replacement = malloc(_strlen(temp) + 1);
+		replacement = malloc(strlen_func(temp) + 1);
 		if (replacement)
-			_strcpy(replacement, temp);
+			strcpy_func(replacement, temp);
 	}
 
 	return (replacement);
 }
 
 /**
- * variable_replacement - Handles variable replacement.
+ * variable_repl_func - Handles variable replacement.
  * @line: A double pointer containing the command and arguments.
  * @exe_ret: A pointer to the return value of the last executed command.
  *
@@ -108,7 +102,7 @@ char *get_env_value(char *beginning, int len)
  *              of the last executed program, and envrionmental variables
  *              preceded by $ with their corresponding value.
  */
-void variable_replacement(char **line, int *exe_ret)
+void variable_repl_func(char **line, int *exe_ret)
 {
 	int j, k = 0, len;
 	char *replacement = NULL, *old_line = NULL, *new_line;
@@ -121,12 +115,12 @@ void variable_replacement(char **line, int *exe_ret)
 		{
 			if (old_line[j + 1] == '$')
 			{
-				replacement = get_pid();
+				replacement = get_p_id();
 				k = j + 2;
 			}
 			else if (old_line[j + 1] == '?')
 			{
-				replacement = _itoa(*exe_ret);
+				replacement = itoa_func(*exe_ret);
 				k = j + 2;
 			}
 			else if (old_line[j + 1])
@@ -139,19 +133,19 @@ void variable_replacement(char **line, int *exe_ret)
 				len = k - (j + 1);
 				replacement = get_env_value(&old_line[j + 1], len);
 			}
-			new_line = malloc(j + _strlen(replacement)
-					  + _strlen(&old_line[k]) + 1);
+			new_line = malloc(j + strlen_func(replacement)
+					  + strlen_func(&old_line[k]) + 1);
 			if (!line)
 				return;
 			new_line[0] = '\0';
-			_strncat(new_line, old_line, j);
+			strncat_func(new_line, old_line, j);
 			if (replacement)
 			{
-				_strcat(new_line, replacement);
+				strcat_func(new_line, replacement);
 				free(replacement);
 				replacement = NULL;
 			}
-			_strcat(new_line, &old_line[k]);
+			strcat_func(new_line, &old_line[k]);
 			free(old_line);
 			*line = new_line;
 			old_line = new_line;

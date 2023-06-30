@@ -1,4 +1,3 @@
-
 #include "shell_.h"
 
 char *strchr_func(char *stt, char ch);

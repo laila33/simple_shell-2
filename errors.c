@@ -1,55 +1,66 @@
-/*
- * File: errors.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
+#include "shell_.h"
 
-#include "shell.h"
-
-int num_len(int num);
-char *_itoa(int num);
-int create_error(char **args, int err);
+int num_length(int num_);
+char *itoa_func(int num_);
+int generate_error(char **args, int err);
 
 /**
- * num_len - Counts the digit length of a number.
- * @num: The number to measure.
+ * num_length - Counts the digit length of a number.
+ * @num_: The number to measure.
  *
  * Return: The digit length.
  */
-int num_len(int num)
+/**
+ * The function "num_length" calculates the length of a given number, including the negative sign if
+ * applicable.
+ * 
+ * @param num_ The parameter `num_` is an integer that represents the number for which we want to
+ * determine the length.
+ * 
+ * @return the length of the given number.
+ */
+int num_length(int num_)
 {
-	unsigned int num1;
+	unsigned int num_;
 	int len = 1;
 
-	if (num < 0)
+	if (num_ < 0)
 	{
 		len++;
-		num1 = num * -1;
+		num_ = num_ * -1;
 	}
 	else
 	{
-		num1 = num;
+		num_ = num_;
 	}
-	while (num1 > 9)
+	while (num_ > 9)
 	{
 		len++;
-		num1 /= 10;
+		num_ /= 10;
 	}
 
 	return (len);
 }
 
 /**
- * _itoa - Converts an integer to a string.
- * @num: The integer.
+ * itoa_func - Converts an integer to a string.
+ * @num_: The integer.
  *
  * Return: The converted string.
  */
-char *_itoa(int num)
+/**
+ * The function `itoa_func` converts an integer to a string representation.
+ * 
+ * @param num_ The parameter `num_` is an integer that represents the number to be converted to a
+ * string.
+ * 
+ * @return a pointer to a character array (string) that represents the input number as a string.
+ */
+char *itoa_func(int num_)
 {
 	char *buffer;
-	int len = num_len(num);
-	unsigned int num1;
+	int len = num_length(num_);
+	unsigned int num_;
 
 	buffer = malloc(sizeof(char) * (len + 1));
 	if (!buffer)
@@ -57,62 +68,74 @@ char *_itoa(int num)
 
 	buffer[len] = '\0';
 
-	if (num < 0)
+	if (num_ < 0)
 	{
-		num1 = num * -1;
+		num_ = num_ * -1;
 		buffer[0] = '-';
 	}
 	else
 	{
-		num1 = num;
+		num_ = num_;
 	}
 
 	len--;
 	do {
-		buffer[len] = (num1 % 10) + '0';
-		num1 /= 10;
+		buffer[len] = (num_ % 10) + '0';
+		num_ /= 10;
 		len--;
-	} while (num1 > 0);
+	} while (num_ > 0);
 
 	return (buffer);
 }
 
 
 /**
- * create_error - Writes a custom error message to stderr.
+ * generate_error - Writes a custom error message to stderr.
  * @args: An array of arguments.
  * @err: The error value.
  *
  * Return: The error value.
  */
-int create_error(char **args, int err)
+/**
+ * The function "generate_error" takes in arguments and an error code, and based on the error code, it
+ * generates an error message and writes it to the standard error output.
+ * 
+ * @param args args is a pointer to a pointer to a character. It is an array of strings, where each
+ * string represents a command-line argument passed to the program.
+ * @param err The parameter "err" is an integer that represents the error code. It is used in a switch
+ * statement to determine which error function to call. The error functions are named err_env_func,
+ * err_1, err_2_exit, err_2_syntax, err_2_cd, err_126
+ * 
+ * @return the value of the variable `err`.
+ */
+int generate_error(char **args, int err)
 {
 	char *error;
 
 	switch (err)
 	{
 	case -1:
-		error = error_env(args);
+		error = err_env_func(args);
 		break;
 	case 1:
-		error = error_1(args);
+		error = err_1(args);
 		break;
 	case 2:
 		if (*(args[0]) == 'e')
-			error = error_2_exit(++args);
+			error = err_2_exit(++args);
 		else if (args[0][0] == ';' || args[0][0] == '&' || args[0][0] == '|')
-			error = error_2_syntax(args);
+			error = err_2_syntax(args);
 		else
-			error = error_2_cd(args);
+			error = err_2_cd(args);
 		break;
 	case 126:
-		error = error_126(args);
+		error = err_126(args);
 		break;
 	case 127:
-		error = error_127(args);
+		error = err_127(args);
 		break;
 	}
-	write(STDERR_FILENO, error, _strlen(error));
+	write(STDERR_FILENO, error, strlen_func(error));
 
 	if (error)
 		free(error);

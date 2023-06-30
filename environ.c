@@ -1,61 +1,65 @@
-/*
- * File: environ.c
- * Auth: Alex Yu
- *       Brennan D Baraban
- */
+#include "shell_.h"
 
-#include "shell.h"
-
-char **_copyenv(void);
-void free_env(void);
-char **_getenv(const char *var);
+char **cp_env_func(void);
+void collect_env(void);
+char **get_env(const char *var);
 
 /**
- * _copyenv - Creates a copy of the environment.
+ * cp_env_func - Creates a copy of the environment.
  *
  * Return: If an error occurs - NULL.
  *         O/w - a double pointer to the new copy.
  */
-char **_copyenv(void)
+/**
+ * The function `cp_env_func` creates a copy of the environment variables and returns it as a double
+ * pointer to strings.
+ * 
+ * @return The function `cp_env_func` returns a pointer to a dynamically allocated array of strings,
+ * which represents a copy of the environment variables.
+ */
+char **cp_env_func(void)
 {
-	char **new_environ;
+	char **new_env;
 	size_t size;
-	int index;
+	int i;
 
 	for (size = 0; environ[size]; size++)
 		;
 
-	new_environ = malloc(sizeof(char *) * (size + 1));
-	if (!new_environ)
+	new_env = malloc(sizeof(char *) * (size + 1));
+	if (!new_env)
 		return (NULL);
 
-	for (index = 0; environ[index]; index++)
+	for (i = 0; environ[i]; i++)
 	{
-		new_environ[index] = malloc(_strlen(environ[index]) + 1);
+		new_env[i] = malloc(strlen_func(environ[i]) + 1);
 
-		if (!new_environ[index])
+		if (!new_env[i])
 		{
-			for (index--; index >= 0; index--)
-				free(new_environ[index]);
-			free(new_environ);
+			for (i--; i >= 0; i--)
+				free(new_env[i]);
+			free(new_env);
 			return (NULL);
 		}
-		_strcpy(new_environ[index], environ[index]);
+		strcpy_func(new_env[i], environ[i]);
 	}
-	new_environ[index] = NULL;
+	new_env[i] = NULL;
 
-	return (new_environ);
+	return (new_env);
 }
 
 /**
- * free_env - Frees the the environment copy.
+ * collect_env - Frees the the environment copy.
  */
-void free_env(void)
+/**
+ * The function "collect_env" frees the memory allocated for the environment variables.
+ */
+void collect_env(void)
 {
-	int index;
+	int i;
 
-	for (index = 0; environ[index]; index++)
-		free(environ[index]);
+	for (i = 0; environ[i]; i++)
+		free(environ[i]);
 	free(environ);
 }
 
@@ -66,15 +70,24 @@ void free_env(void)
  * Return: If the environmental variable does not exist - NULL.
  *         Otherwise - a pointer to the environmental variable.
  */
-char **_getenv(const char *var)
+/**
+ * The function "get_env" searches for a specific environment variable and returns a pointer to its
+ * value.
+ * 
+ * @param var The parameter "var" is a pointer to a character array, which represents the name of the
+ * environment variable we are searching for.
+ * 
+ * @return a pointer to a pointer to a character array (char **).
+ */
+char **get_env(const char *var)
 {
-	int index, len;
+	int i, len;
 
-	len = _strlen(var);
-	for (index = 0; environ[index]; index++)
+	len = strlen_func(var);
+	for (i = 0; environ[i]; i++)
 	{
-		if (_strncmp(var, environ[index], len) == 0)
-			return (&environ[index]);
+		if (strncmp_func(var, environ[i], len) == 0)
+			return (&environ[i]);
 	}
 
 	return (NULL);
