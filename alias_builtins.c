@@ -86,7 +86,7 @@ void set_alias_func(char *var_name, char *value)
 	new_value[k] = '\0';
 	while (temp)
 	{
-		if (_strcmp(var_name, temp->name) == 0)
+		if (strcmp_func(var_name, temp->name) == 0)
 		{
 			free(temp->value);
 			temp->value = new_value;
