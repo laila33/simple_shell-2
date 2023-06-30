@@ -1,7 +1,7 @@
 #include "shell_.h"
 
-int num_length(int numm);
-char *itoa_func(int numm);
+int num_length(int num);
+char *itoa_func(int num);
 int generate_error(char **args, int err);
 
 /**
@@ -68,7 +68,7 @@ char *itoa_func(int num)
 
 	buffer[len] = '\0';
 
-	if (num_ < 0)
+	if (num < 0)
 	{
 		num = num * -1;
 		buffer[0] = '-';
