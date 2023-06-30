@@ -1,12 +1,12 @@
 #include "shell_.h"
 
-int num_length(int num_);
-char *itoa_func(int num_);
+int num_length(int numm);
+char *itoa_func(int numm);
 int generate_error(char **args, int err);
 
 /**
  * num_length - Counts the digit length of a number.
- * @num_: The number to measure.
+ * @num: The number to measure.
  *
  * Return: The digit length.
  */
@@ -19,24 +19,24 @@ int generate_error(char **args, int err);
  * 
  * @return the length of the given number.
  */
-int num_length(int num_)
+int num_length(int num)
 {
 	unsigned int num_;
 	int len = 1;
 
-	if (num_ < 0)
+	if (num < 0)
 	{
 		len++;
-		num_ = num_ * -1;
+		num = num * -1;
 	}
 	else
 	{
-		num_ = num_;
+		num_= num;
 	}
-	while (num_ > 9)
+	while (num > 9)
 	{
 		len++;
-		num_ /= 10;
+		num /= 10;
 	}
 
 	return (len);
@@ -56,11 +56,11 @@ int num_length(int num_)
  * 
  * @return a pointer to a character array (string) that represents the input number as a string.
  */
-char *itoa_func(int num_)
+char *itoa_func(int num)
 {
 	char *buffer;
-	int len = num_length(num_);
-	unsigned int num_;
+	int len = num_length(num);
+	unsigned int num;
 
 	buffer = malloc(sizeof(char) * (len + 1));
 	if (!buffer)
@@ -70,20 +70,20 @@ char *itoa_func(int num_)
 
 	if (num_ < 0)
 	{
-		num_ = num_ * -1;
+		num = num * -1;
 		buffer[0] = '-';
 	}
 	else
 	{
-		num_ = num_;
+		num = num;
 	}
 
 	len--;
 	do {
-		buffer[len] = (num_ % 10) + '0';
-		num_ /= 10;
+		buffer[len] = (num % 10) + '0';
+		num /= 10;
 		len--;
-	} while (num_ > 0);
+	} while (num > 0);
 
 	return (buffer);
 }
